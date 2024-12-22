@@ -14,7 +14,7 @@
     </div>
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="搜索店铺...">
-        <button onclick="searchShops()">搜索</button>
+        <button onclick="searchShop()">搜索</button>
     </div>
     <div class="random-select">
         <button onclick="selectRandomShop()">随机选择</button>
@@ -46,8 +46,8 @@
             const shopList = document.getElementById('shopList');
             shopList.innerHTML = ''; // 清空当前店铺列表
 
-            if (data.shops.length > 0) {
-                data.shops.forEach(shop => {
+            if (data.shop.length > 0) {
+                data.shop.forEach(shop => {
                     const shopItem = document.createElement('div');
                     shopItem.className = 'shop-item';
                     shopItem.innerText = shop.name;
@@ -65,8 +65,8 @@
             fetch('/shop')
                 .then(response => response.json())
                 .then(data => {
-                    const randomIndex = Math.floor(Math.random() * data.shops.length);
-                    const selectedShop = data.shops[randomIndex];
+                    const randomIndex = Math.floor(Math.random() * data.shop.length);
+                    const selectedShop = data.shop[randomIndex];
                     window.location.href = `/shop?id=${selectedShop.id}`;
                 })
                 .catch(error => {
@@ -74,7 +74,7 @@
                 });
         }
         // 搜索店铺
-        function searchShops() {
+        function searchShop() {
             const keyword = document.getElementById('searchInput').textContent;
             fetch(`/search?keyword=${keyword}`)
                 .then(response => response.json())

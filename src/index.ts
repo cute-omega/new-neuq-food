@@ -34,19 +34,19 @@ export default {
 						return new Response('Shop Not Found', { status: 404 });
 					}
 				} else {
-					const shops = await env.DB.prepare('SELECT * FROM shop').all();
-					return new Response(JSON.stringify({ shops: shops.results }), { headers: { 'Content-Type': 'application/json' } });
+					const shop = await env.DB.prepare('SELECT * FROM shop').all();
+					return new Response(JSON.stringify({ shop: shop.results }), { headers: { 'Content-Type': 'application/json' } });
 				}
 
 			// keyword参数的搜索值
 			case '/search':
 				const keyword = url.searchParams.get('keyword');
 				if (keyword) {
-					const searchShops = await env.DB.prepare('SELECT * FROM shop WHERE name LIKE ?').bind(`%${keyword}%`).all();
-					return new Response(JSON.stringify({ shops: searchShops.results }), { headers: { 'Content-Type': 'application/json' } });
+					const searchShop = await env.DB.prepare('SELECT * FROM shop WHERE name LIKE ?').bind(`%${keyword}%`).all();
+					return new Response(JSON.stringify({ shop: searchShop.results }), { headers: { 'Content-Type': 'application/json' } });
 				} else {
-					const shops = await env.DB.prepare('SELECT * FROM shop').all();
-					return new Response(JSON.stringify({ shops: shops.results }), { headers: { 'Content-Type': 'application/json' } });
+					const shop = await env.DB.prepare('SELECT * FROM shop').all();
+					return new Response(JSON.stringify({ shop: shop.results }), { headers: { 'Content-Type': 'application/json' } });
 				}
 
 			// 错误处理
