@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>东秦点餐 - 主页</title>
+    <link href="index.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="announcement" id="announcement">
+        <!-- 公告内容将由后端接口指定 -->
+    </div>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索店铺...">
+        <button onclick="searchShops()">搜索</button>
+    </div>
+    <div class="random-select">
+        <button onclick="selectRandomShop()">随机选择</button>
+    </div>
+    <div class="shop-list" id="shopList">
+        <!-- 店铺列表将由后端接口指定 -->
+    </div>
+
+    <script>
+        // 获取公告内容
+        fetch('/announcement')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('announcement').innerText = data.content;
+            })
+            .catch(error => {
+                alert('网络错误！');
+            });
+
+        // 获取店铺列表
+        fetch('/shop')
+            .then(response => response.json())
+            .then(data => __setShopList(data))
+            .catch(error => {
+                alert('网络错误！');
+            });
+
+        function __setShopList(data) {
+            const shopList = document.getElementById('shopList');
+            shopList.innerHTML = ''; // 清空当前店铺列表
+
+            if (data.shops.length > 0) {
+                data.shops.forEach(shop => {
+                    const shopItem = document.createElement('div');
+                    shopItem.className = 'shop-item';
+                    shopItem.innerText = shop.name;
+                    shopItem.addEventListener('click', () => {
+                        window.location.href = `/shop?id=${shop.id}`;
+                    });
+                    shopList.appendChild(shopItem);
+                });
+            } else {
+                shopList.innerText = '没有符合条件的店铺';
+            }
+        }
+        // 随机选择店铺
+        function selectRandomShop() {
+            fetch('/shop')
+                .then(response => response.json())
+                .then(data => {
+                    const randomIndex = Math.floor(Math.random() * data.shops.length);
+                    const selectedShop = data.shops[randomIndex];
+                    window.location.href = `/shop?id=${selectedShop.id}`;
+                })
+                .catch(error => {
+                    alert('网络错误！');
+                });
+        }
+        // 搜索店铺
+        function searchShops() {
+            const keyword = document.getElementById('searchInput').textContent;
+            fetch(`/search?keyword=${keyword}`)
+                .then(response => response.json())
+                .then(data => __setShopList(data))
+                .catch(error => {
+                    alert('网络错误！');
+                });
+        }
+    </script>
+</body>
+
+</html>

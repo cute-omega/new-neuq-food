@@ -1,0 +1,21 @@
+#:schema node_modules/wrangler/config-schema.json
+assets = {directory = "./public", binding = "ASSETS"}
+compatibility_date = "2023-05-18"
+compatibility_flags = ["nodejs_compat"]
+main = "src/index.ts"
+name = "new-neuq-food"
+
+# Workers Logs
+# Docs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
+# Configuration: https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs
+[observability]
+enabled = true
+
+[[r2_buckets]]
+binding = "image_storage"
+bucket_name = "your_bucket_name"
+
+[[d1_databases]]
+binding = "DB"
+database_id = "your_datebase_uuid"
+database_name = "your_database_name"

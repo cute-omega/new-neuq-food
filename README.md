@@ -1,0 +1,3 @@
+#
+
+请自行修改wrangler.example.toml中的r2_buckets.bucket_name为你的R2存储桶名称，d1_databases.database_id为你的D1数据库id，d1_databases.database_name为你的D1数据库名称。然后改名为wrangler.toml

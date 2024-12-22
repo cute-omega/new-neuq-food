@@ -1,0 +1,54 @@
+/* 设置页面字体、边距、内边距和背景颜色 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.announcement {
+    background-color: #ff9800;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.search-box {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.search-box input {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.random-select {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.random-select button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.shop-list {
+    margin: 20px;
+}
+
+.shop-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
