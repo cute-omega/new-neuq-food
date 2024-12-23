@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>东秦点餐 - 店铺详情</title>
+    <link href="shop-detail.css" rel="stylesheet" />
+</head>
+
+<body>
+    <h1>店铺详情</h1>
+    <div id="shop-details"></div>
+    <button onclick="window.location.href = '/index.html'">返回首页</button>
+    <script>
+        // Step 1: Parse the GET Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        // Step 2: Fetch Shop Details
+        if (id) {
+            fetch(`/shop?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Step 3: Display the Shop Details
+                    const shopDetailsDiv = document.getElementById('shop-details');
+                    const shop = data.shop;
+                    shopDetailsDiv.innerHTML = `
+                        <h2>${shop.name}</h2>
+                        <p>${shop.description}</p>
+                    `;
+                })
+                .catch(error => {
+                    alert('网络错误：' + error);
+                });
+        } else {
+            document.getElementById('shop-details').innerText = 'No shop ID provided.';
+        }
+    </script>
+</body>
+
+</html>
