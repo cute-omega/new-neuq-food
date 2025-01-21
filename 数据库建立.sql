@@ -7,9 +7,8 @@ CREATE TABLE shop (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
     description TEXT,
-    image-url-json TEXT,
+    image_url_json TEXT,
     location VARCHAR(255),
-    rating DECIMAL(5,2),
-    is-wx-app-direct BOOLEAN,
-    wx-app VARCHAR(255)
+    is_wx_app_url_direct BOOLEAN,
+    wx_app_url VARCHAR(255)
 );

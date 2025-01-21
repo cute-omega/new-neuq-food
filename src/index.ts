@@ -23,19 +23,47 @@ export default {
 			case '/announcement':
 				const announcement = await env.DB.prepare('SELECT content FROM announcement ORDER BY id DESC LIMIT 1').first();
 				return new Response(JSON.stringify({ content: announcement?.content }), { headers: { 'Content-Type': 'application/json' } });
-			// 店铺列表。如果GET参数id存在，返回该店铺的详细信息
+			// 店铺列表。如果GET参数id存在，返回该店铺的详细信息。对于POST请求，新增店铺信息。
 			case '/shop':
-				const id = url.searchParams.get('id');
-				if (id) {
-					const shop = await env.DB.prepare('SELECT * FROM shop WHERE id = ?').bind(id).first();
-					if (shop) {
-						return new Response(JSON.stringify({ shop }), { headers: { 'Content-Type': 'application/json' } });
-					} else {
-						return new Response('Shop Not Found', { status: 404 });
+				switch (request.method) {
+					case 'GET': {
+						const id = url.searchParams.get('id');
+						if (id) {
+							const shop = await env.DB.prepare('SELECT * FROM shop WHERE id = ?').bind(id).first();
+							if (shop) {
+								return new Response(JSON.stringify({ shop }), { headers: { 'Content-Type': 'application/json' } });
+							} else {
+								return new Response('不存在对应店铺', { status: 404 });
+							}
+						} else {
+							const shop = await env.DB.prepare('SELECT * FROM shop').all();
+							return new Response(JSON.stringify({ shop: shop.results }), { headers: { 'Content-Type': 'application/json' } });
+						}
 					}
-				} else {
-					const shop = await env.DB.prepare('SELECT * FROM shop').all();
-					return new Response(JSON.stringify({ shop: shop.results }), { headers: { 'Content-Type': 'application/json' } });
+					case 'POST': {
+						const jsonData: object = await request.json();
+						// 使用类型守卫来检查jsonData是否包含name属性
+						if (!('name' in jsonData && 'description' in jsonData && 'image_url_json' in jsonData && 'location' in jsonData && 'is_wx_app_url_direct' in jsonData && 'wx_app_url' in jsonData)) {
+							return new Response('请求方法错误', { status: 405 });
+						}
+
+						const { name, description, image_url_json, location, is_wx_app_url_direct, wx_app_url } = jsonData;
+						// 插入数据库
+						const result = await env.DB.prepare(
+							'INSERT INTO shop (name, description, image_url_json, location, is_wx_app_url_direct, wx_app_url) VALUES (?, ?, ?, ?, ?, ?)'
+						)
+							.bind(name, description, image_url_json, location, is_wx_app_url_direct, wx_app_url)
+							.run();
+
+						if (result.success) {
+							return new Response(JSON.stringify({ message: '店铺添加成功' }), { status: 200 });
+						} else {
+							return new Response(JSON.stringify({ message: '店铺添加失败' }), { status: 500 });
+						}
+					}
+					default: {
+						return new Response(JSON.stringify({ message: '请求体缺少必要字段' }), { status: 400 });
+					}
 				}
 
 			// keyword参数的搜索值
@@ -47,6 +75,45 @@ export default {
 				} else {
 					const shop = await env.DB.prepare('SELECT * FROM shop').all();
 					return new Response(JSON.stringify({ shop: shop.results }), { headers: { 'Content-Type': 'application/json' } });
+				}
+			// 图片上传/获取
+			case '/image':
+				switch (request.method) {
+					case 'POST': {
+						const fileName = url.searchParams.get('filename');
+						if (fileName) {
+							await env.image_storage.put(fileName, request.body);
+							return new Response(JSON.stringify({ image_url: `?filename=%{fileName}` }), { status: 200 });
+						} else {
+							return new Response('未指定文件名', { status: 400 });
+						}
+					}
+					case 'GET': {
+						const filename = url.searchParams.get('filename');
+						if (filename) {
+							const file = await env.image_storage.get(filename);
+							if (file) {
+								const object = await env.image_storage.get(filename);
+
+								if (object === null) {
+									return new Response("文件不存在", { status: 404 });
+								}
+
+								const headers = new Headers();
+								object.writeHttpMetadata(headers);
+								headers.set("etag", object.httpEtag);
+
+								return new Response(object.body, {
+									headers
+								});
+							}
+						}
+						return new Response('文件不存在', { status: 404 });
+
+					}
+					default: {
+						return new Response('请求方法错误', { status: 405 });
+					}
 				}
 
 			// 错误处理
