@@ -12,3 +12,8 @@ CREATE TABLE shop (
     is_wx_app_url_direct BOOLEAN,
     wx_app_url VARCHAR(255)
 );
+
+CREATE TABLE image (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    image_url VARCHAR(255)
+)

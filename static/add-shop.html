@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>东秦点餐 - 添加店铺</title>
+    <link href="add-shop.css" rel="stylesheet">
 </head>
 
 <body>
@@ -12,24 +13,32 @@
     <form id="addShopForm">
         <label for="name">店铺名称:</label>
         <input type="text" id="name" name="name" required><br><br>
+
         <label for="description">店铺描述:</label>
         <textarea id="description" name="description" required></textarea><br><br>
+
         <label for="image_url_json">图片URL:</label>
         <input type="text" id="image_url_json" name="image_url_json" required><br><br>
+
         <label for="location">店铺位置:</label>
         <input type="text" id="location" name="location" required><br><br>
+
         <label for="is_wx_app_url_direct">是否支持微信小程序直接跳转:</label>
         <input type="checkbox" id="is_wx_app_url_direct" name="is_wx_app_url_direct"><br><br>
+
         <label for="wx_app_url">微信小程序URL:</label>
         <input type="text" id="wx_app_url" name="wx_app_url" required><br><br>
+
         <input type="submit" value="提交">
 
     </form>
 
     <script>
+        // 监听表单提交事件
         document.getElementById('addShopForm').addEventListener('submit', async function (event) {
             event.preventDefault();
 
+            // 收集表单数据
             const formData = {
                 name: document.getElementById('name').value,
                 description: document.getElementById('description').value,
@@ -39,6 +48,7 @@
                 wx_app_url: document.getElementById('wx_app_url').value,
             };
 
+            // 发送表单数据到服务器
             const response = await fetch('/shop', {
                 method: 'POST',
                 headers: {
@@ -47,6 +57,7 @@
                 body: JSON.stringify(formData),
             });
 
+            // 处理服务器响应并显示消息
             const result = await response.json();
             alert(result.message);
         });

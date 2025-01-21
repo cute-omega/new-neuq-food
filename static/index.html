@@ -31,7 +31,7 @@
                 document.getElementById('announcement').innerText = data.content;
             })
             .catch(error => {
-                alert('网络错误：' + error);
+                alert('错误：' + error);
             });
 
         // 获取店铺列表
@@ -39,7 +39,7 @@
             .then(response => response.json())
             .then(data => __setShopList(data))
             .catch(error => {
-                alert('网络错误：' + error);
+                alert('错误：' + error);
             });
 
         function __setShopList(data) {
@@ -70,7 +70,7 @@
                     window.location.href = `/shop-detail.html?id=${selectedShop.id}`;
                 })
                 .catch(error => {
-                    alert('网络错误：' + error);
+                    alert('错误：' + error);
                 });
         }
         // 搜索店铺
@@ -80,7 +80,7 @@
                 .then(response => response.json())
                 .then(data => __setShopList(data))
                 .catch(error => {
-                    alert('网络错误：' + error);
+                    alert('错误：' + error);
                 });
         }
     </script>

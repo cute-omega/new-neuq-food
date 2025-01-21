@@ -5,15 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>上传图片</title>
+    <link href="add-image.css" rel="stylesheet">
 </head>
 
 <body>
     <h1>上传图片</h1>
     <form action="/image" method="POST" enctype="multipart/form-data">
-        <label for="image">Choose an image:</label>
+        <label for="image">选择图片：</label>
         <input type="file" id="image" name="image" accept="image/*" required>
         <button type="submit">Upload</button>
     </form>
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const image = document.querySelector('#image');
+            const data = new FormData();
+            data.append('image', image.files[0]);
+            fetch('/image', {
+                method: 'POST',
+                body: data
+            }).then(response => {
+                if (response.ok) {
+                    alert('图片上传成功！');
+                    form.reset();
+                } else {
+                    alert('图片上传失败！');
+                }
+            }).catch(error => {
+                console.error(error);
+                alert('图片上传失败！');
+            });
+        });
+
+    </script>
 </body>
 
 </html>
