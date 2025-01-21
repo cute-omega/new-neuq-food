@@ -13,16 +13,16 @@
     <div id="shop-details"></div>
     <button onclick="window.location.href = '/index.html'">返回首页</button>
     <script>
-        // Step 1: Parse the GET Parameters
+        // 获取URL参数并解析
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
 
-        // Step 2: Fetch Shop Details
+        // 根据ID获取店铺详细信息
         if (id) {
             fetch(`/shop?id=${id}`)
                 .then(response => response.json())
                 .then(data => {
-                    // Step 3: Display the Shop Details
+                    // 显示店铺详细信息
                     const shopDetailsDiv = document.getElementById('shop-details');
                     const shop = data.shop;
                     shopDetailsDiv.innerHTML = `

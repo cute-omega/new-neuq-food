@@ -31,7 +31,9 @@ export default {
 						if (id) {
 							const shop = await env.DB.prepare('SELECT * FROM shop WHERE id = ?').bind(id).first();
 							if (shop) {
-								return new Response(JSON.stringify({ shop }), { headers: { 'Content-Type': 'application/json' } });
+								return new Response(JSON.stringify({
+									shop: shop.result
+								}), { headers: { 'Content-Type': 'application/json' } });
 							} else {
 								return new Response('不存在对应店铺', { status: 404 });
 							}
