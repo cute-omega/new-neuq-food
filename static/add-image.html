@@ -13,28 +13,32 @@
     <form action="/image" method="POST" enctype="multipart/form-data">
         <label for="image">选择图片：</label>
         <input type="file" id="image" name="image" accept="image/*" required>
-        <button type="submit">Upload</button>
+
+        <label for="imageName">图片名称：</label>
+        <input type="text" id="imageName" name="imageName" required>
+
+        <button type="submit">上传</button>
     </form>
     <script>
         const form = document.querySelector('form');
         form.addEventListener('submit', (event) => {
             event.preventDefault();
             const image = document.querySelector('#image');
+            const imageName = document.querySelector('#imageName');
             const data = new FormData();
             data.append('image', image.files[0]);
-            fetch('/image', {
+            fetch(`/image?filename=${imageName.value}`, {
                 method: 'POST',
                 body: data
             }).then(response => {
                 if (response.ok) {
-                    alert('图片上传成功！');
+                    alert(`${imageName.value} 图片上传成功！`);
                     form.reset();
                 } else {
-                    alert('图片上传失败！');
+                    alert(`${imageName.value} 图片上传失败！`);
                 }
             }).catch(error => {
-                console.error(error);
-                alert('图片上传失败！');
+                alert(`${imageName.value} 图片上传时出错：${error}`);
             });
         });
 

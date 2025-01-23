@@ -15,5 +15,6 @@ CREATE TABLE shop (
 
 CREATE TABLE image (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
     image_url VARCHAR(255)
 )
